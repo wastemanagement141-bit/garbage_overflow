@@ -12,7 +12,7 @@ export default async function handler(req, res) {
         .limit(1);
 
     if (deviceId) {
-        query = query.eq('deviceId', deviceId);
+        query = query.eq('deviceid', deviceId);
     }
 
     const { data, error } = await query;
@@ -22,7 +22,12 @@ export default async function handler(req, res) {
     }
 
     if (data && data.length > 0) {
-        return res.status(200).json(data[0]);
+        const record = data[0];
+        return res.status(200).json({
+            ...record,
+            deviceId: record.deviceid,
+            fillPercentage: record.fillpercentage
+        });
     } else {
         // Return default/empty state if no data found
         return res.status(200).json({

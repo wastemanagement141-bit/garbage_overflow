@@ -11,7 +11,7 @@ export default async function handler(req, res) {
         .limit(20);
 
     if (deviceId) {
-        query = query.eq('deviceId', deviceId);
+        query = query.eq('deviceid', deviceId);
     }
 
     const { data, error } = await query;
@@ -20,5 +20,12 @@ export default async function handler(req, res) {
         return res.status(500).json({ error: error.message });
     }
 
-    return res.status(200).json(data);
+    // Map backend snake_case to frontend camelCase
+    const formattedData = data.map(record => ({
+        ...record,
+        deviceId: record.deviceid,
+        fillPercentage: record.fillpercentage
+    }));
+
+    return res.status(200).json(formattedData);
 }

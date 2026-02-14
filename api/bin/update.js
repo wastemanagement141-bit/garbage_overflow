@@ -40,7 +40,11 @@ export default async function handler(req, res) {
     try {
         const { data, error } = await supabase
             .from('bins')
-            .insert([{ deviceId, fillPercentage, status }])
+            .insert([{
+                deviceid: deviceId,
+                fillpercentage: fillPercentage,
+                status
+            }])
             .select();
 
         if (error) {
