@@ -8,7 +8,7 @@ export default async function handler(req, res) {
     let query = supabase
         .from('bins')
         .select('*')
-        .order('createdAt', { ascending: false })
+        .order('createdat', { ascending: false })
         .limit(1);
 
     if (deviceId) {
@@ -26,7 +26,8 @@ export default async function handler(req, res) {
         return res.status(200).json({
             ...record,
             deviceId: record.deviceid,
-            fillPercentage: record.fillpercentage
+            fillPercentage: record.fillpercentage,
+            createdAt: record.createdat
         });
     } else {
         // Return default/empty state if no data found

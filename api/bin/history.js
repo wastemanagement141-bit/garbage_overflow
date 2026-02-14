@@ -7,7 +7,7 @@ export default async function handler(req, res) {
     let query = supabase
         .from('bins')
         .select('*')
-        .order('createdAt', { ascending: false })
+        .order('createdat', { ascending: false })
         .limit(20);
 
     if (deviceId) {
@@ -24,7 +24,8 @@ export default async function handler(req, res) {
     const formattedData = data.map(record => ({
         ...record,
         deviceId: record.deviceid,
-        fillPercentage: record.fillpercentage
+        fillPercentage: record.fillpercentage,
+        createdAt: record.createdat
     }));
 
     return res.status(200).json(formattedData);
