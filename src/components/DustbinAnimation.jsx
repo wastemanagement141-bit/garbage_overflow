@@ -57,7 +57,7 @@ const DustbinAnimation = ({ fillPercentage }) => {
             >
                 {/* Floating Status Emoji Badge */}
                 <motion.div
-                    className="absolute -right-8 top-0 z-30 bg-white shadow-lg rounded-full p-2 text-2xl border border-slate-100"
+                    className="absolute -right-8 top-0 z-30 bg-white dark:bg-slate-700 shadow-lg rounded-full p-2 text-2xl border border-slate-100 dark:border-slate-600"
                     initial={{ scale: 0 }}
                     animate={{ scale: 1, rotate: [0, 10, 0] }}
                     transition={{ type: "spring", stiffness: 200, damping: 10 }}
@@ -68,7 +68,7 @@ const DustbinAnimation = ({ fillPercentage }) => {
                 {/* Pulsing Aura for Critical Levels */}
                 {level >= 80 && (
                     <motion.div
-                        className="absolute inset-0 rounded-b-xl bg-red-400 blur-xl -z-10"
+                        className="absolute inset-0 rounded-b-xl bg-red-400 dark:bg-red-600 blur-xl -z-10"
                         animate={{ opacity: [0.2, 0.6, 0.2], scale: [1, 1.1, 1] }}
                         transition={{ repeat: Infinity, duration: 2 }}
                     />
@@ -82,16 +82,16 @@ const DustbinAnimation = ({ fillPercentage }) => {
                     className="absolute -top-4 left-0 w-full z-20"
                 >
                     <svg viewBox="0 0 100 20" className="w-full drop-shadow-xl filter">
-                        <path d="M5 20 L2 15 L15 5 L85 5 L98 15 L95 20 Z" fill="#334155" />
-                        <rect x="35" y="0" width="30" height="6" rx="3" fill="#334155" />
-                        <path d="M15 5 L85 5" stroke="#475569" strokeWidth="2" />
+                        <path d="M5 20 L2 15 L15 5 L85 5 L98 15 L95 20 Z" className="fill-slate-700 dark:fill-slate-500" />
+                        <rect x="35" y="0" width="30" height="6" rx="3" className="fill-slate-700 dark:fill-slate-500" />
+                        <path d="M15 5 L85 5" className="stroke-slate-600 dark:stroke-slate-400" strokeWidth="2" />
                     </svg>
                 </motion.div>
 
                 {/* Can Container */}
-                <div className="relative w-full h-full overflow-hidden rounded-b-xl border-[3px] border-slate-700 bg-slate-50 shadow-2xl">
+                <div className="relative w-full h-full overflow-hidden rounded-b-xl border-[3px] border-slate-700 dark:border-slate-500 bg-slate-50 dark:bg-slate-800 shadow-2xl">
                     {/* Inner texture */}
-                    <div className="absolute inset-0 opacity-10 bg-[linear-gradient(45deg,#cbd5e1_1px,transparent_1px)] [background-size:10px_10px]"></div>
+                    <div className="absolute inset-0 opacity-10 bg-[linear-gradient(45deg,#cbd5e1_1px,transparent_1px)] dark:bg-[linear-gradient(45deg,#475569_1px,transparent_1px)] [background-size:10px_10px]"></div>
 
                     {/* Liquid Fill */}
                     <motion.div
@@ -142,7 +142,7 @@ const DustbinAnimation = ({ fillPercentage }) => {
                         key={level}
                         initial={{ scale: 0.5, opacity: 0, rotate: -10 }}
                         animate={{ scale: 1, opacity: 1, rotate: 0 }}
-                        className={`text-4xl font-black ${level > 55 ? 'text-white' : 'text-slate-700'}`}
+                        className={`text-4xl font-black ${level > 55 ? 'text-white' : 'text-slate-700 dark:text-slate-200'}`}
                         style={{ textShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
                     >
                         {Math.round(level)}
