@@ -1,5 +1,5 @@
 import React from 'react';
-import { Trash2, CheckCircle, AlertTriangle, AlertOctagon } from 'lucide-react';
+import { CheckCircle, AlertTriangle, AlertOctagon } from 'lucide-react';
 import DustbinAnimation from './DustbinAnimation';
 
 const StatusCard = ({ data }) => {
@@ -26,14 +26,9 @@ const StatusCard = ({ data }) => {
 
     return (
         <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-xl p-6 md:p-8 transform hover:scale-[1.02] transition-all duration-300 border border-slate-100 dark:border-slate-700">
-            <div className="flex justify-between items-start mb-6">
-                <div>
-                    <p className="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">Device ID</p>
-                    <h3 className="text-2xl font-bold text-slate-800 dark:text-white">{deviceId || 'Waiting...'}</h3>
-                </div>
-                <div className={`p-3 rounded-2xl ${statusBg} dark:bg-opacity-20`}>
-                    <Trash2 className={`w-6 h-6 ${statusText} dark:text-opacity-90`} />
-                </div>
+            <div className="mb-6">
+                <p className="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">Device ID</p>
+                <h3 className="text-2xl font-bold text-slate-800 dark:text-white">{deviceId || 'Waiting...'}</h3>
             </div>
 
             <div className="mb-2 flex flex-col items-center justify-center">
