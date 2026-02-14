@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { getBinStatus, getHistory } from '../services/api';
+import { getBinStatus, getHistory, getRegistry } from '../services/api';
 import StatusCard from './StatusCard';
 import AlertBox from './AlertBox';
 import HistoryTable from './HistoryTable';
