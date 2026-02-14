@@ -12,7 +12,7 @@ const HistoryTable = ({ historyData }) => {
                 <span className="text-xs font-semibold text-slate-400 uppercase tracking-wider">Last 20 Records</span>
             </div>
 
-            <div className="overflow-y-auto flex-1 max-h-[400px]">
+            <div className="overflow-y-auto flex-1 h-full">
                 <table className="w-full text-left border-collapse">
                     <thead className="bg-slate-50 sticky top-0 z-10">
                         <tr>

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Trash2, CheckCircle, AlertTriangle, AlertOctagon } from 'lucide-react';
+import DustbinAnimation from './DustbinAnimation';
 
 const StatusCard = ({ data }) => {
     const { deviceId, fillPercentage, status } = data || { deviceId: 'Loading...', fillPercentage: 0, status: 'UNKNOWN' };
@@ -21,11 +22,10 @@ const StatusCard = ({ data }) => {
         Icon = AlertOctagon;
     }
 
-    // Calculate width for progress bar
-    const width = `${Math.min(Math.max(fillPercentage, 0), 100)}%`;
+
 
     return (
-        <div className="bg-white rounded-3xl shadow-xl p-8 transform hover:scale-[1.02] transition-transform duration-300 border border-slate-100">
+        <div className="bg-white rounded-3xl shadow-xl p-6 md:p-8 transform hover:scale-[1.02] transition-transform duration-300 border border-slate-100">
             <div className="flex justify-between items-start mb-6">
                 <div>
                     <p className="text-slate-500 text-sm font-medium uppercase tracking-wider">Device ID</p>
@@ -36,26 +36,14 @@ const StatusCard = ({ data }) => {
                 </div>
             </div>
 
-            <div className="mb-6">
-                <div className="flex justify-between items-end mb-2">
-                    <span className="text-5xl font-extrabold text-slate-900">
-                        {fillPercentage}%
-                    </span>
-                    <span className={`px-4 py-1.5 rounded-full text-sm font-bold ${statusBg} ${statusText} border border-opacity-20 flex items-center gap-2`}>
-                        <Icon size={16} />
-                        {status}
-                    </span>
+            <div className="mb-2 flex flex-col items-center justify-center">
+                <div>
+                    <DustbinAnimation fillPercentage={fillPercentage} />
                 </div>
 
-                {/* Progress Bar Container */}
-                <div className="h-4 w-full bg-slate-100 rounded-full overflow-hidden relative">
-                    <div
-                        className={`h-full ${statusColor} rounded-full transition-all duration-1000 ease-out shadow-[0_0_10px_rgba(0,0,0,0.1)]`}
-                        style={{ width: width }}
-                    >
-                        {/* Shimmer effect */}
-                        <div className="absolute top-0 left-0 bottom-0 right-0 bg-white opacity-20 w-full animate-pulse"></div>
-                    </div>
+                <div className={`mt-2 px-4 py-1.5 rounded-full text-sm font-bold ${statusBg} ${statusText} border border-opacity-20 flex items-center gap-2`}>
+                    <Icon size={16} />
+                    {status}
                 </div>
             </div>
 
