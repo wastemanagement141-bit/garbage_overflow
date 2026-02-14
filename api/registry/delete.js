@@ -11,6 +11,8 @@ export default async function handler(req, res) {
         return res.status(400).json({ error: 'ID is required' });
     }
 
+    let deviceIdToDelete = null;
+
     if (id.startsWith('temp-')) {
         // Handle discovered but unregistered bin: Delete history so it disappears from the discovered list
         const deviceId = id.replace('temp-', '').trim();

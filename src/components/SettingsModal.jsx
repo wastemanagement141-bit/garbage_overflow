@@ -105,52 +105,52 @@ const SettingsModal = ({ isOpen, onClose }) => {
                         className="bg-white dark:bg-slate-800 w-full max-w-2xl rounded-3xl shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
                     >
                         {/* Header */}
-                        <div className="p-6 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
-                            <h2 className="text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
+                        <div className="p-4 md:p-6 border-b border-slate-100 dark:border-slate-700 flex items-center justify-between bg-slate-50/50 dark:bg-slate-800/50">
+                            <h2 className="text-xl md:text-2xl font-bold text-slate-800 dark:text-white flex items-center gap-2">
                                 {t('settings')}
                             </h2>
                             <button onClick={onClose} className="p-2 hover:bg-slate-100 dark:hover:bg-slate-700 rounded-full transition-colors">
-                                <X className="w-6 h-6 text-slate-400" />
+                                <X className="w-5 h-5 md:w-6 md:h-6 text-slate-400" />
                             </button>
                         </div>
 
-                        <div className="p-6 overflow-y-auto">
+                        <div className="p-4 md:p-6 overflow-y-auto">
                             {/* Form */}
-                            <form onSubmit={handleSubmit} className="mb-8 p-6 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-2xl border border-indigo-100 dark:border-indigo-900/30">
-                                <h3 className="text-lg font-bold text-indigo-900 dark:text-indigo-300 mb-4 flex items-center gap-2">
-                                    {isEditing ? <Edit2 size={18} /> : <Plus size={18} />}
+                            <form onSubmit={handleSubmit} className="mb-6 md:mb-8 p-4 md:p-6 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-2xl border border-indigo-100 dark:border-indigo-900/30">
+                                <h3 className="text-base md:text-lg font-bold text-indigo-900 dark:text-indigo-300 mb-4 flex items-center gap-2">
+                                    {isEditing ? <Edit2 size={16} className="md:w-[18px] md:h-[18px]" /> : <Plus size={16} className="md:w-[18px] md:h-[18px]" />}
                                     {isEditing ? (currentBin.id ? t('editBin') : 'Register Discovered Bin') : t('addBin')}
                                 </h3>
-                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-3 md:gap-4">
                                     <div className="space-y-1">
-                                        <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase ml-1">{t('binName')}</label>
+                                        <label className="text-[10px] md:text-xs font-bold text-slate-500 dark:text-slate-400 uppercase ml-1">{t('binName')}</label>
                                         <input
                                             type="text"
                                             required
                                             placeholder="Main Lobby Bin"
-                                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                                            className="w-full px-3 md:px-4 py-2 md:py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm md:text-base"
                                             value={currentBin.name}
                                             onChange={(e) => setCurrentBin({ ...currentBin, name: e.target.value })}
                                         />
                                     </div>
                                     <div className="space-y-1">
-                                        <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase ml-1">{t('deviceIdLabel')}</label>
+                                        <label className="text-[10px] md:text-xs font-bold text-slate-500 dark:text-slate-400 uppercase ml-1">{t('deviceIdLabel')}</label>
                                         <input
                                             type="text"
                                             required
                                             disabled={isEditing}
                                             placeholder="BIN001"
-                                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+                                            className="w-full px-3 md:px-4 py-2 md:py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed text-sm md:text-base"
                                             value={currentBin.deviceId}
                                             onChange={(e) => setCurrentBin({ ...currentBin, deviceId: e.target.value })}
                                         />
                                     </div>
                                     <div className="md:col-span-2 space-y-1">
-                                        <label className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase ml-1">{t('binDetails')}</label>
+                                        <label className="text-[10px] md:text-xs font-bold text-slate-500 dark:text-slate-400 uppercase ml-1">{t('binDetails')}</label>
                                         <input
                                             type="text"
                                             placeholder="Floor 1, West Wing"
-                                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all"
+                                            className="w-full px-3 md:px-4 py-2 md:py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all text-sm md:text-base"
                                             value={currentBin.details}
                                             onChange={(e) => setCurrentBin({ ...currentBin, details: e.target.value })}
                                         />
@@ -161,7 +161,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                                         <button
                                             type="button"
                                             onClick={resetForm}
-                                            className="px-6 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold transition-all"
+                                            className="px-4 md:px-6 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold transition-all text-sm md:text-base"
                                             disabled={submitting}
                                         >
                                             {t('cancel')}
@@ -170,9 +170,9 @@ const SettingsModal = ({ isOpen, onClose }) => {
                                     <button
                                         type="submit"
                                         disabled={submitting}
-                                        className="px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg shadow-indigo-100 dark:shadow-none flex items-center gap-2 transition-all disabled:opacity-70 disabled:cursor-wait"
+                                        className="px-4 md:px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg shadow-indigo-100 dark:shadow-none flex items-center gap-2 transition-all disabled:opacity-70 disabled:cursor-wait text-sm md:text-base"
                                     >
-                                        <Save size={18} />
+                                        <Save size={16} className="md:w-[18px] md:h-[18px]" />
                                         {submitting ? 'Saving...' : t('save')}
                                     </button>
                                 </div>
@@ -180,11 +180,11 @@ const SettingsModal = ({ isOpen, onClose }) => {
 
                             {/* List */}
                             <div className="space-y-3">
-                                <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">{t('allBins')}</h3>
+                                <h3 className="text-[10px] md:text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">{t('allBins')}</h3>
                                 {loading ? (
-                                    <div className="py-10 text-center animate-pulse text-slate-400">Loading bins...</div>
+                                    <div className="py-10 text-center animate-pulse text-slate-400 text-sm">{t('loading')}...</div>
                                 ) : bins.length === 0 ? (
-                                    <div className="py-10 text-center text-slate-400 bg-slate-50 dark:bg-slate-900/20 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700">
+                                    <div className="py-10 text-center text-slate-400 bg-slate-50 dark:bg-slate-900/20 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700 text-sm">
                                         {t('noBins')}
                                     </div>
                                 ) : (
@@ -192,37 +192,38 @@ const SettingsModal = ({ isOpen, onClose }) => {
                                         {Array.isArray(bins) && bins.map(bin => {
                                             const isTemp = bin.id && bin.id.toString().startsWith('temp-');
                                             return (
-                                                <div key={bin.id} className="p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-700 flex items-center justify-between group hover:border-indigo-200 dark:hover:border-indigo-900/50 transition-all shadow-sm">
-                                                    <div>
-                                                        <div className="flex items-center gap-2">
-                                                            <h4 className="font-bold text-slate-800 dark:text-white">{bin.name}</h4>
+                                                <div key={bin.id} className="p-3 md:p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-700 flex items-center justify-between group hover:border-indigo-200 dark:hover:border-indigo-900/50 transition-all shadow-sm">
+                                                    <div className="min-w-0 pr-2">
+                                                        <div className="flex items-center gap-2 flex-wrap">
+                                                            <h4 className="font-bold text-slate-800 dark:text-white truncate max-w-[150px] md:max-w-xs text-sm md:text-base">{bin.name}</h4>
                                                             {isTemp && (
-                                                                <span className="px-1.5 py-0.5 rounded-md bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 text-[10px] font-bold uppercase tracking-wider">Discovered</span>
+                                                                <span className="px-1.5 py-0.5 rounded-md bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 text-[10px] font-bold uppercase tracking-wider whitespace-nowrap">Discovered</span>
                                                             )}
                                                         </div>
-                                                        <div className="flex items-center gap-2 text-xs text-slate-500">
-                                                            <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded font-mono uppercase tracking-wider">{bin.deviceid || bin.deviceId}</span>
-                                                            {bin.details && <span>• {bin.details}</span>}
+                                                        <div className="flex items-center gap-2 text-xs text-slate-500 mt-0.5">
+                                                            <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded font-mono uppercase tracking-wider shrink-0">{bin.deviceid || bin.deviceId}</span>
+                                                            {bin.details && <span className="truncate hidden sm:inline">• {bin.details}</span>}
                                                         </div>
+                                                        {bin.details && <div className="text-xs text-slate-500 sm:hidden truncate mt-0.5">{bin.details}</div>}
                                                     </div>
-                                                    <div className="flex items-center gap-1">
+                                                    <div className="flex items-center gap-1 shrink-0">
                                                         <button
                                                             onClick={() => handleEdit(bin)}
-                                                            className="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-all"
+                                                            className="p-1.5 md:p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-all"
                                                             title="Edit"
                                                         >
-                                                            <Edit2 size={18} />
+                                                            <Edit2 size={16} className="md:w-[18px] md:h-[18px]" />
                                                         </button>
                                                         <button
                                                             onClick={() => handleDelete(bin.id, bin.name)}
-                                                            className="p-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-all disabled:opacity-50"
+                                                            className="p-1.5 md:p-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-all disabled:opacity-50"
                                                             disabled={deletingId === bin.id}
                                                             title="Delete"
                                                         >
                                                             {deletingId === bin.id ? (
-                                                                <div className="w-4 h-4 border-2 border-rose-600 border-t-transparent rounded-full animate-spin" />
+                                                                <div className="w-3 h-3 md:w-4 md:h-4 border-2 border-rose-600 border-t-transparent rounded-full animate-spin" />
                                                             ) : (
-                                                                <Trash2 size={18} />
+                                                                <Trash2 size={16} className="md:w-[18px] md:h-[18px]" />
                                                             )}
                                                         </button>
                                                     </div>

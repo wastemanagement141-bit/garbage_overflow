@@ -23,8 +23,8 @@ const HistoryTable = ({ historyData }) => {
                 <span className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">{t('lastRecords')}</span>
             </div>
 
-            <div className="overflow-y-auto flex-1 h-full scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
-                <table className="w-full text-left border-collapse">
+            <div className="overflow-y-auto overflow-x-auto flex-1 h-full scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
+                <table className="w-full text-left border-collapse min-w-[500px]">
                     <thead className="bg-slate-50 dark:bg-slate-800/80 sticky top-0 z-10 backdrop-blur-sm">
                         <tr>
                             <th className="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t('time')}</th>

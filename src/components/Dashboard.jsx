@@ -47,7 +47,7 @@ const Dashboard = () => {
     const isFull = statusData?.status === 'FULL' || (statusData?.fillPercentage || 0) > 80;
 
     return (
-        <div className="h-screen w-full overflow-hidden flex flex-col relative z-10 p-4 md:p-6 lg:p-8 text-slate-800 dark:text-slate-100 transition-colors duration-300">
+        <div className="min-h-screen w-full flex flex-col relative z-10 p-4 md:p-6 lg:p-8 text-slate-800 dark:text-slate-100 transition-colors duration-300">
             <AlertBox isVisible={isFull} />
 
             <header className="flex-none flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
