@@ -8,4 +8,12 @@ export default defineConfig({
     react(),
     tailwindcss(),
   ],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://garbage-overflow.vercel.app',
+        changeOrigin: true,
+      }
+    }
+  }
 })

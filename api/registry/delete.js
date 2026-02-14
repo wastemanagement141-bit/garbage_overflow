@@ -47,7 +47,7 @@ export default async function handler(req, res) {
         const { error: binsDeleteError } = await supabase
             .from('bins')
             .delete()
-            .eq('deviceid', deviceIdToDelete);
+            .ilike('deviceid', deviceIdToDelete);
 
         if (binsDeleteError) {
             return res.status(500).json({ error: binsDeleteError.message });

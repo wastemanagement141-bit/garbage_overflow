@@ -29,11 +29,11 @@ export default async function handler(req, res) {
     const uniqueDataIds = [...new Set(dataBins.map(b => b.deviceid))];
 
     // 4. Merge discovered bins into the result if they aren't registered yet
-    const registeredIds = new Set(registeredBins.map(b => b.deviceid));
+    const registeredIds = new Set(registeredBins.map(b => b.deviceid.toUpperCase()));
     const mergedData = [...registeredBins];
 
     uniqueDataIds.forEach(deviceId => {
-        if (!registeredIds.has(deviceId)) {
+        if (deviceId && !registeredIds.has(deviceId.toUpperCase())) {
             mergedData.push({
                 id: `temp-${deviceId}`, // Marker for unregistered bin
                 deviceid: deviceId,
