@@ -51,13 +51,13 @@ const SettingsModal = ({ isOpen, onClose }) => {
         setIsEditing(true);
     };
 
-    const handleDelete = async (binId) => {
-        if (binId && binId.toString().startsWith('temp-')) {
-            alert('Cannot delete a discovered device record. It will disappear once registered or when no longer sending data.');
-            return;
-        }
+    const handleDelete = async (binId, binName) => {
+        const isTemp = binId && binId.toString().startsWith('temp-');
+        const confirmMsg = isTemp
+            ? `Are you sure you want to delete "${binName}" and ALL its linked history data? This device will disappear unless it sends more data.`
+            : `Are you sure you want to delete "${binName}"? This will UNREGISTER the device and DELETE all its history data.`;
 
-        if (window.confirm('Are you sure you want to delete this bin?')) {
+        if (window.confirm(confirmMsg)) {
             try {
                 await deleteRegistry(binId);
                 fetchBins();
@@ -181,7 +181,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                                                     <button onClick={() => handleEdit(bin)} className="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-all">
                                                         <Edit2 size={18} />
                                                     </button>
-                                                    <button onClick={() => handleDelete(bin.id)} className="p-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-all">
+                                                    <button onClick={() => handleDelete(bin.id, bin.name)} className="p-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-all">
                                                         <Trash2 size={18} />
                                                     </button>
                                                 </div>
