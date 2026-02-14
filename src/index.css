@@ -4,7 +4,7 @@
   --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
 }
 
-/* Default dark mode is handled by Tailwind v4 */
+@custom-variant dark (&:where(.dark, .dark *));
 
 /* Custom scrollbar for history table */
 ::-webkit-scrollbar {
