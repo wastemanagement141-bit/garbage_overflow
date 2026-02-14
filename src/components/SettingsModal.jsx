@@ -8,14 +8,21 @@ const SettingsModal = ({ isOpen, onClose }) => {
     const { t } = useLanguage();
     const [bins, setBins] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [submitting, setSubmitting] = useState(false);
+    const [deletingId, setDeletingId] = useState(null);
     const [isEditing, setIsEditing] = useState(false);
     const [currentBin, setCurrentBin] = useState({ id: null, deviceId: '', name: '', details: '' });
 
     const fetchBins = async () => {
         setLoading(true);
-        const data = await getRegistry();
-        setBins(data);
-        setLoading(false);
+        try {
+            const data = await getRegistry();
+            setBins(data);
+        } catch (error) {
+            console.error("Failed to fetch bins:", error);
+        } finally {
+            setLoading(false);
+        }
     };
 
     useEffect(() => {
@@ -26,30 +33,38 @@ const SettingsModal = ({ isOpen, onClose }) => {
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setSubmitting(true);
         try {
-            // Check if we are editing an existing registered bin
+            // Check if we are editing an existing registered bin (has a valid database ID)
+            // Note: 'temp-' IDs are null in currentBin.id due to mapping in handleEdit
             if (isEditing && currentBin.id) {
                 await updateRegistry(currentBin);
             } else {
                 // Determine whether we are "adding" a new bin manually OR
-                // "registering" a discovered bin (which has id=null but isEditing=true)
-                // In both cases, we need to create a new registry entry.
+                // "registering" a discovered bin (which has id=null but might be coming from 'Edit' logic)
+                // In both cases, we need to add a new registry entry.
                 await addRegistry(currentBin);
             }
+            // Reset form and refresh list
             setCurrentBin({ id: null, deviceId: '', name: '', details: '' });
             setIsEditing(false);
-            fetchBins();
+            await fetchBins();
         } catch (error) {
-            alert('Error saving bin: ' + error.message);
+            alert('Error saving bin: ' + (error.response?.data?.error || error.message));
+        } finally {
+            setSubmitting(false);
         }
     };
 
     const handleEdit = (bin) => {
+        // If it's a discovered bin (starts with temp-), treat it as a new registration (id=null)
+        // If it's a registered bin, keep the ID for updates
         const isUnregistered = bin.id && bin.id.toString().startsWith('temp-');
+
         setCurrentBin({
             id: isUnregistered ? null : bin.id,
-            deviceId: bin.deviceid,
-            name: bin.name,
+            deviceId: bin.deviceid || bin.deviceId || '', // Handle potentially disparate naming
+            name: bin.name || '',
             details: bin.details || ''
         });
         setIsEditing(true);
@@ -62,13 +77,21 @@ const SettingsModal = ({ isOpen, onClose }) => {
             : `Are you sure you want to delete "${binName}"? This will UNREGISTER the device and DELETE all its history data.`;
 
         if (window.confirm(confirmMsg)) {
+            setDeletingId(binId);
             try {
                 await deleteRegistry(binId);
-                fetchBins();
+                await fetchBins();
             } catch (error) {
-                alert('Error deleting bin: ' + error.message);
+                alert('Error deleting bin: ' + (error.response?.data?.error || error.message));
+            } finally {
+                setDeletingId(null);
             }
         }
+    };
+
+    const resetForm = () => {
+        setIsEditing(false);
+        setCurrentBin({ id: null, deviceId: '', name: '', details: '' });
     };
 
     return (
@@ -96,7 +119,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                             <form onSubmit={handleSubmit} className="mb-8 p-6 bg-indigo-50/50 dark:bg-indigo-900/10 rounded-2xl border border-indigo-100 dark:border-indigo-900/30">
                                 <h3 className="text-lg font-bold text-indigo-900 dark:text-indigo-300 mb-4 flex items-center gap-2">
                                     {isEditing ? <Edit2 size={18} /> : <Plus size={18} />}
-                                    {isEditing ? t('editBin') : t('addBin')}
+                                    {isEditing ? (currentBin.id ? t('editBin') : 'Register Discovered Bin') : t('addBin')}
                                 </h3>
                                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <div className="space-y-1">
@@ -117,7 +140,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                                             required
                                             disabled={isEditing}
                                             placeholder="BIN001"
-                                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all disabled:opacity-50"
+                                            className="w-full px-4 py-2.5 rounded-xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-900 text-slate-800 dark:text-white focus:ring-2 focus:ring-indigo-500 outline-none transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                                             value={currentBin.deviceId}
                                             onChange={(e) => setCurrentBin({ ...currentBin, deviceId: e.target.value })}
                                         />
@@ -137,21 +160,20 @@ const SettingsModal = ({ isOpen, onClose }) => {
                                     {isEditing && (
                                         <button
                                             type="button"
-                                            onClick={() => {
-                                                setIsEditing(false);
-                                                setCurrentBin({ id: null, deviceId: '', name: '', details: '' });
-                                            }}
+                                            onClick={resetForm}
                                             className="px-6 py-2 rounded-xl text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 font-bold transition-all"
+                                            disabled={submitting}
                                         >
                                             {t('cancel')}
                                         </button>
                                     )}
                                     <button
                                         type="submit"
-                                        className="px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg shadow-indigo-100 dark:shadow-none flex items-center gap-2 transition-all"
+                                        disabled={submitting}
+                                        className="px-6 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-700 text-white font-bold shadow-lg shadow-indigo-100 dark:shadow-none flex items-center gap-2 transition-all disabled:opacity-70 disabled:cursor-wait"
                                     >
                                         <Save size={18} />
-                                        {t('save')}
+                                        {submitting ? 'Saving...' : t('save')}
                                     </button>
                                 </div>
                             </form>
@@ -160,37 +182,53 @@ const SettingsModal = ({ isOpen, onClose }) => {
                             <div className="space-y-3">
                                 <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest ml-1">{t('allBins')}</h3>
                                 {loading ? (
-                                    <div className="py-10 text-center animate-pulse text-slate-400">Loading...</div>
+                                    <div className="py-10 text-center animate-pulse text-slate-400">Loading bins...</div>
                                 ) : bins.length === 0 ? (
                                     <div className="py-10 text-center text-slate-400 bg-slate-50 dark:bg-slate-900/20 rounded-2xl border border-dashed border-slate-200 dark:border-slate-700">
                                         {t('noBins')}
                                     </div>
                                 ) : (
                                     <div className="grid grid-cols-1 gap-3">
-                                        {Array.isArray(bins) && bins.map(bin => (
-                                            <div key={bin.id} className="p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-700 flex items-center justify-between group hover:border-indigo-200 dark:hover:border-indigo-900/50 transition-all shadow-sm">
-                                                <div>
-                                                    <div className="flex items-center gap-2">
-                                                        <h4 className="font-bold text-slate-800 dark:text-white">{bin.name}</h4>
-                                                        {bin.isUnregistered && (
-                                                            <span className="px-1.5 py-0.5 rounded-md bg-indigo-100 dark:bg-indigo-900/40 text-indigo-600 dark:text-indigo-400 text-[10px] font-bold uppercase tracking-wider">New</span>
-                                                        )}
+                                        {Array.isArray(bins) && bins.map(bin => {
+                                            const isTemp = bin.id && bin.id.toString().startsWith('temp-');
+                                            return (
+                                                <div key={bin.id} className="p-4 bg-white dark:bg-slate-900 rounded-2xl border border-slate-100 dark:border-slate-700 flex items-center justify-between group hover:border-indigo-200 dark:hover:border-indigo-900/50 transition-all shadow-sm">
+                                                    <div>
+                                                        <div className="flex items-center gap-2">
+                                                            <h4 className="font-bold text-slate-800 dark:text-white">{bin.name}</h4>
+                                                            {isTemp && (
+                                                                <span className="px-1.5 py-0.5 rounded-md bg-amber-100 dark:bg-amber-900/40 text-amber-600 dark:text-amber-400 text-[10px] font-bold uppercase tracking-wider">Discovered</span>
+                                                            )}
+                                                        </div>
+                                                        <div className="flex items-center gap-2 text-xs text-slate-500">
+                                                            <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded font-mono uppercase tracking-wider">{bin.deviceid || bin.deviceId}</span>
+                                                            {bin.details && <span>• {bin.details}</span>}
+                                                        </div>
                                                     </div>
-                                                    <div className="flex items-center gap-2 text-xs text-slate-500">
-                                                        <span className="bg-slate-100 dark:bg-slate-800 px-2 py-0.5 rounded font-mono uppercase tracking-wider">{bin.deviceid}</span>
-                                                        {bin.details && <span>• {bin.details}</span>}
+                                                    <div className="flex items-center gap-1">
+                                                        <button
+                                                            onClick={() => handleEdit(bin)}
+                                                            className="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-all"
+                                                            title="Edit"
+                                                        >
+                                                            <Edit2 size={18} />
+                                                        </button>
+                                                        <button
+                                                            onClick={() => handleDelete(bin.id, bin.name)}
+                                                            className="p-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-all disabled:opacity-50"
+                                                            disabled={deletingId === bin.id}
+                                                            title="Delete"
+                                                        >
+                                                            {deletingId === bin.id ? (
+                                                                <div className="w-4 h-4 border-2 border-rose-600 border-t-transparent rounded-full animate-spin" />
+                                                            ) : (
+                                                                <Trash2 size={18} />
+                                                            )}
+                                                        </button>
                                                     </div>
                                                 </div>
-                                                <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                                                    <button onClick={() => handleEdit(bin)} className="p-2 text-indigo-600 hover:bg-indigo-50 dark:hover:bg-indigo-900/30 rounded-lg transition-all">
-                                                        <Edit2 size={18} />
-                                                    </button>
-                                                    <button onClick={() => handleDelete(bin.id, bin.name)} className="p-2 text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-900/30 rounded-lg transition-all">
-                                                        <Trash2 size={18} />
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        ))}
+                                            );
+                                        })}
                                     </div>
                                 )}
                             </div>

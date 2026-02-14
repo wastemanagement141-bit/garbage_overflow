@@ -15,7 +15,7 @@ export default async function handler(req, res) {
 
     if (id.startsWith('temp-')) {
         // Handle discovered but unregistered bin
-        deviceIdToDelete = id.replace('temp-', '');
+        deviceIdToDelete = id.replace('temp-', '').trim();
     } else {
         // Handle registered bin
         const { data: binRecord, error: fetchError } = await supabase
