@@ -3,9 +3,10 @@ import axios from 'axios';
 const API_BASE_URL = '/api/bin';
 const REGISTRY_BASE_URL = '/api/registry';
 
-export const getBinStatus = async () => {
+export const getBinStatus = async (deviceId = null) => {
     try {
-        const response = await axios.get(`${API_BASE_URL}/status`);
+        const url = deviceId ? `${API_BASE_URL}/status?deviceId=${deviceId}` : `${API_BASE_URL}/status`;
+        const response = await axios.get(url);
         return response.data;
     } catch (error) {
         console.error('Error fetching bin status:', error);

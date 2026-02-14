@@ -5,7 +5,11 @@ import { useLanguage } from '../context/LanguageContext';
 
 const StatusCard = ({ data }) => {
     const { t } = useLanguage();
-    const { deviceId, fillPercentage, status } = data || { deviceId: 'Loading...', fillPercentage: 0, status: 'UNKNOWN' };
+
+    if (!data) return null;
+
+    const { fillPercentage, status, deviceId, friendlyName } = data;
+    // const isUnknown = deviceId === 'UNKNOWN'; // This line was in the provided snippet but not explicitly requested to be added. Keeping original structure.
 
     let statusColor = 'bg-emerald-500';
     let statusText = 'text-emerald-700';
@@ -36,7 +40,14 @@ const StatusCard = ({ data }) => {
         <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-xl p-6 md:p-8 transform hover:scale-[1.02] transition-all duration-300 border border-slate-100 dark:border-slate-700">
             <div className="mb-6">
                 <p className="text-slate-500 dark:text-slate-400 text-sm font-medium uppercase tracking-wider">{t('deviceId')}</p>
-                <h3 className="text-2xl font-bold text-slate-800 dark:text-white">{deviceId || t('waiting')}</h3>
+                <h3 className="text-2xl font-bold text-slate-800 dark:text-white" title={friendlyName || deviceId}>
+                    {friendlyName || deviceId || t('waiting')}
+                </h3>
+                {friendlyName && friendlyName !== deviceId && (
+                    <span className="text-xs bg-slate-100 dark:bg-slate-700 px-2 py-0.5 rounded text-slate-500 font-mono hidden md:inline-block">
+                        {deviceId}
+                    </span>
+                )}
             </div>
 
             <div className="mb-2 flex flex-col items-center justify-center">
