@@ -41,8 +41,8 @@ const StatusCard = ({ data }) => {
                     <DustbinAnimation fillPercentage={fillPercentage} />
                 </div>
 
-                <div className={`mt-2 px-4 py-1.5 rounded-full text-sm font-bold ${statusBg} ${statusText} border border-opacity-20 flex items-center gap-2`}>
-                    <Icon size={16} />
+                <div className={`mt-2 px-4 py-1.5 rounded-full text-xs font-bold ${statusBg} ${statusText} border border-opacity-20 flex items-center gap-2 uppercase tracking-wide shadow-sm`}>
+                    <Icon size={14} />
                     {status}
                 </div>
             </div>

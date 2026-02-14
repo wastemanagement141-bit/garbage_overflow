@@ -1,14 +1,32 @@
 import React, { useEffect, useState } from 'react';
-import { motion, useAnimation } from 'framer-motion';
+import { motion, useAnimation, AnimatePresence } from 'framer-motion';
+
+const TrashParticle = ({ delay, x, y, size = 10 }) => (
+    <motion.div
+        animate={{ y: [0, -15, 0], x: [0, 5, 0], rotate: [0, 10, -10, 0] }}
+        transition={{ repeat: Infinity, duration: 3 + Math.random() * 2, delay, ease: "easeInOut" }}
+        className="absolute bg-white/40 rounded-sm shadow-sm border border-white/20"
+        style={{ width: size, height: size, left: x, top: y }}
+    />
+);
 
 const DustbinAnimation = ({ fillPercentage }) => {
     const [level, setLevel] = useState(0);
-    const controls = useAnimation();
+    const [isHovered, setIsHovered] = useState(false);
+    const lidControls = useAnimation();
 
     useEffect(() => {
         const pct = isNaN(fillPercentage) ? 0 : fillPercentage;
         setLevel(Math.min(Math.max(pct, 0), 100));
     }, [fillPercentage]);
+
+    useEffect(() => {
+        if (isHovered || level > 80) {
+            lidControls.start({ rotate: -25, y: -15 });
+        } else {
+            lidControls.start({ rotate: 0, y: 0 });
+        }
+    }, [isHovered, level, lidControls]);
 
     // Determine color based on fill level
     const getColor = (pct) => {
@@ -19,78 +37,119 @@ const DustbinAnimation = ({ fillPercentage }) => {
 
     const color = getColor(level);
 
+    // Dynamic emoji based on status
+    const getEmoji = (pct) => {
+        if (pct >= 90) return "😫"; // Critical
+        if (pct >= 80) return "😨"; // Warning
+        if (pct >= 50) return "😐"; // Half
+        if (pct >= 20) return "🙂"; // Fine
+        return "😄"; // Empty-ish
+    };
+
     return (
-        <div className="flex justify-center items-center py-4">
-            <div className="relative w-32 h-44">
-                {/* Bin Lid - Animated to open slightly when full */}
+        <div className="flex justify-center items-center py-4 select-none">
+            <motion.div
+                className="relative w-32 h-44 cursor-pointer"
+                onHoverStart={() => setIsHovered(true)}
+                onHoverEnd={() => setIsHovered(false)}
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+            >
+                {/* Floating Status Emoji Badge */}
                 <motion.div
-                    animate={{
-                        rotate: level > 80 ? -15 : 0,
-                        y: level > 80 ? -10 : 0
-                    }}
-                    transition={{ type: "spring", stiffness: 100 }}
-                    style={{ originX: 0.8, originY: 1 }}
+                    className="absolute -right-8 top-0 z-30 bg-white shadow-lg rounded-full p-2 text-2xl border border-slate-100"
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1, rotate: [0, 10, 0] }}
+                    transition={{ type: "spring", stiffness: 200, damping: 10 }}
+                >
+                    {getEmoji(level)}
+                </motion.div>
+
+                {/* Pulsing Aura for Critical Levels */}
+                {level >= 80 && (
+                    <motion.div
+                        className="absolute inset-0 rounded-b-xl bg-red-400 blur-xl -z-10"
+                        animate={{ opacity: [0.2, 0.6, 0.2], scale: [1, 1.1, 1] }}
+                        transition={{ repeat: Infinity, duration: 2 }}
+                    />
+                )}
+
+                {/* Bin Lid */}
+                <motion.div
+                    animate={lidControls}
+                    transition={{ type: "spring", stiffness: 120, damping: 10 }}
+                    style={{ originX: 0.1, originY: 1 }}
                     className="absolute -top-4 left-0 w-full z-20"
                 >
-                    <svg viewBox="0 0 100 20" className="w-full drop-shadow-md">
-                        <path d="M10 20 L5 15 L20 5 L80 5 L95 15 L90 20 Z" fill="#334155" />
-                        <rect x="40" y="0" width="20" height="5" rx="2" fill="#334155" />
+                    <svg viewBox="0 0 100 20" className="w-full drop-shadow-xl filter">
+                        <path d="M5 20 L2 15 L15 5 L85 5 L98 15 L95 20 Z" fill="#334155" />
+                        <rect x="35" y="0" width="30" height="6" rx="3" fill="#334155" />
+                        <path d="M15 5 L85 5" stroke="#475569" strokeWidth="2" />
                     </svg>
                 </motion.div>
 
                 {/* Can Container */}
-                <div className="relative w-full h-full overflow-hidden rounded-b-xl border-4 border-slate-700 bg-white shadow-xl">
-                    {/* Background Mesh/Pattern */}
-                    <div className="absolute inset-0 opacity-5 bg-[radial-gradient(#cbd5e1_1px,transparent_1px)] [background-size:8px_8px]"></div>
+                <div className="relative w-full h-full overflow-hidden rounded-b-xl border-[3px] border-slate-700 bg-slate-50 shadow-2xl">
+                    {/* Inner texture */}
+                    <div className="absolute inset-0 opacity-10 bg-[linear-gradient(45deg,#cbd5e1_1px,transparent_1px)] [background-size:10px_10px]"></div>
 
                     {/* Liquid Fill */}
                     <motion.div
                         className="absolute bottom-0 left-0 right-0 w-full"
+                        initial={{ height: 0 }}
                         animate={{ height: `${level}%` }}
-                        transition={{ type: "spring", stiffness: 50, damping: 15 }}
+                        transition={{ type: "spring", stiffness: 60, damping: 20 }}
                     >
+                        {/* Liquid Body */}
                         <div
-                            className="w-full h-full opacity-80"
-                            style={{ backgroundColor: color }}
+                            className="w-full h-full relative"
+                            style={{ backgroundColor: color, opacity: 0.85 }}
                         >
-                            {/* Bubbles/Trash particles */}
-                            <motion.div
-                                animate={{ y: [0, -10, 0], x: [0, 5, 0] }}
-                                transition={{ repeat: Infinity, duration: 3, ease: "easeInOut" }}
-                                className="absolute top-1/4 left-1/4 w-3 h-3 bg-white rounded-full opacity-30"
-                            />
-                            <motion.div
-                                animate={{ y: [0, -15, 0], x: [0, -5, 0] }}
-                                transition={{ repeat: Infinity, duration: 4, delay: 1, ease: "easeInOut" }}
-                                className="absolute top-1/2 right-1/4 w-2 h-2 bg-white rounded-full opacity-30"
-                            />
+                            {/* Floating Trash Particles */}
+                            {level > 10 && (
+                                <>
+                                    <TrashParticle delay={0} x="20%" y="30%" size={12} />
+                                    <TrashParticle delay={1} x="60%" y="50%" size={8} />
+                                    <TrashParticle delay={2} x="40%" y="20%" size={10} />
+                                    <TrashParticle delay={0.5} x="70%" y="70%" size={6} />
+                                </>
+                            )}
                         </div>
 
-                        {/* Wave effect at the top of the liquid */}
+                        {/* Top Wave Surface */}
                         <motion.div
-                            className="absolute -top-3 left-0 right-0 h-6 w-[200%]"
-                            style={{ backgroundColor: color, opacity: 0.8, borderRadius: '40%' }}
-                            animate={{ x: ["-25%", "0%"] }}
-                            transition={{ repeat: Infinity, duration: 2, ease: "linear" }}
+                            className="absolute -top-4 left-0 right-0 h-8 w-[200%]"
+                            style={{ backgroundColor: color, opacity: 0.6, borderRadius: '40%' }}
+                            animate={{ x: ["-50%", "0%"] }}
+                            transition={{ repeat: Infinity, duration: 4, ease: "linear" }}
+                        />
+                        <motion.div
+                            className="absolute -top-3 left-0 right-0 h-8 w-[200%]"
+                            style={{ backgroundColor: color, opacity: 0.9, borderRadius: '45%' }}
+                            animate={{ x: ["0%", "-50%"] }}
+                            transition={{ repeat: Infinity, duration: 3, ease: "linear" }}
                         />
                     </motion.div>
 
-                    {/* Glass reflection */}
-                    <div className="absolute inset-0 bg-gradient-to-tr from-white/10 to-transparent pointer-events-none rounded-b-lg"></div>
+                    {/* Glass Reflection & Shine */}
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-transparent to-black/5 pointer-events-none rounded-b-lg"></div>
+                    <div className="absolute top-2 left-2 w-1.5 h-full bg-white/20 rounded-full blur-[1px]"></div>
                 </div>
 
-                {/* Percentage Text Overlay */}
-                <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+                {/* Percentage Text Overlay with Stroke Effect */}
+                <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none drop-shadow-md">
                     <motion.span
                         key={level}
-                        initial={{ scale: 0.8, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        className={`text-3xl font-black drop-shadow-lg ${level > 50 ? 'text-white' : 'text-slate-700'}`}
+                        initial={{ scale: 0.5, opacity: 0, rotate: -10 }}
+                        animate={{ scale: 1, opacity: 1, rotate: 0 }}
+                        className={`text-4xl font-black ${level > 55 ? 'text-white' : 'text-slate-700'}`}
+                        style={{ textShadow: '0 2px 4px rgba(0,0,0,0.1)' }}
                     >
-                        {Math.round(level)}%
+                        {Math.round(level)}
+                        <span className="text-xl align-top">%</span>
                     </motion.span>
                 </div>
-            </div>
+            </motion.div>
         </div>
     );
 };
