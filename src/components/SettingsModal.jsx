@@ -73,8 +73,8 @@ const SettingsModal = ({ isOpen, onClose }) => {
     const handleDelete = async (binId, binName) => {
         const isTemp = binId && binId.toString().startsWith('temp-');
         const confirmMsg = isTemp
-            ? `Are you sure you want to delete "${binName}" and ALL its linked history data? This device will disappear unless it sends more data.`
-            : `Are you sure you want to delete "${binName}"? This will UNREGISTER the device and DELETE all its history data.`;
+            ? `Are you sure you want to PERMANENTLY DELETE all history data for "${binName}"? This cannot be undone.`
+            : `Are you sure you want to Unregister "${binName}"? The device will revert to a "Discovered" state if it has existing data.`;
 
         if (window.confirm(confirmMsg)) {
             setDeletingId(binId);
