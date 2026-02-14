@@ -1,8 +1,11 @@
 import React from 'react';
-import { AlertTriangle, X } from 'lucide-react';
+import { AlertTriangle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { useLanguage } from '../context/LanguageContext';
 
 const AlertBox = ({ isVisible }) => {
+    const { t } = useLanguage();
+
     return (
         <AnimatePresence>
             {isVisible && (
@@ -16,14 +19,11 @@ const AlertBox = ({ isVisible }) => {
                         <AlertTriangle className="text-red-600 dark:text-red-200 w-6 h-6" />
                     </div>
                     <div className="flex-1">
-                        <h4 className="text-red-800 dark:text-red-100 font-bold text-lg">Critical Alert</h4>
+                        <h4 className="text-red-800 dark:text-red-100 font-bold text-lg">{t('criticalAlert')}</h4>
                         <p className="text-red-700 dark:text-red-200 text-sm mt-1">
-                            Garbage bin is overflowing! Fill level has exceeded 80%. Please schedule a pickup immediately.
+                            {t('alertMessage')}
                         </p>
                     </div>
-                    <button className="text-red-400 hover:text-red-600 transition-colors">
-                        <X size={20} />
-                    </button>
                 </motion.div>
             )}
         </AnimatePresence>

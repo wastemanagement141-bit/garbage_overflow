@@ -5,8 +5,11 @@ import AlertBox from './AlertBox';
 import HistoryTable from './HistoryTable';
 import { RefreshCw } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
+import LanguageToggle from './LanguageToggle';
+import { useLanguage } from '../context/LanguageContext';
 
 const Dashboard = () => {
+    const { t } = useLanguage();
     const [statusData, setStatusData] = useState(null);
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -48,15 +51,16 @@ const Dashboard = () => {
             <header className="flex-none flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
                 <div>
                     <h1 className="text-3xl md:text-4xl font-black tracking-tight text-slate-800 dark:text-white">
-                        Smart<span className="text-indigo-600 dark:text-indigo-400">Waste</span>
+                        {t('smart')}<span className="text-indigo-600 dark:text-indigo-400">{t('waste')}</span>
                     </h1>
-                    <p className="text-slate-500 dark:text-slate-400 font-medium mt-1 text-sm md:text-base">IoT Garbage Overflow Management System</p>
+                    <p className="text-slate-500 dark:text-slate-400 font-medium mt-1 text-sm md:text-base">{t('subtitle')}</p>
                 </div>
                 <div className="flex items-center gap-3">
                     <div className="flex items-center gap-2 text-slate-400 dark:text-slate-500 text-xs md:text-sm bg-white dark:bg-slate-800 px-3 py-1.5 md:px-4 md:py-2 rounded-full shadow-sm border border-slate-100 dark:border-slate-700">
                         <RefreshCw className="w-3 h-3 md:w-4 md:h-4 animate-spin" style={{ animationDuration: '3s' }} />
-                        <span>Last updated: {lastUpdated.toLocaleTimeString()}</span>
+                        <span>{t('lastUpdated')}: {lastUpdated.toLocaleTimeString()}</span>
                     </div>
+                    <LanguageToggle />
                     <ThemeToggle />
                 </div>
             </header>

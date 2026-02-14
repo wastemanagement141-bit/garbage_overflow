@@ -1,26 +1,36 @@
 import React from 'react';
-import { Clock, Battery, Activity } from 'lucide-react';
+import { Clock } from 'lucide-react';
+import { useLanguage } from '../context/LanguageContext';
 
 const HistoryTable = ({ historyData }) => {
-    return (
+    const { t } = useLanguage();
 
+    // Translate status
+    const getStatusText = (status) => {
+        if (status === 'EMPTY') return t('empty');
+        if (status === 'HALF') return t('half');
+        if (status === 'FULL') return t('full');
+        return status;
+    };
+
+    return (
         <div className="bg-white dark:bg-slate-800 rounded-3xl shadow-xl overflow-hidden border border-slate-100 dark:border-slate-700 flex flex-col h-full">
             <div className="p-6 border-b border-slate-100 dark:border-slate-700 bg-slate-50/50 dark:bg-slate-800/50 flex items-center justify-between">
                 <h3 className="text-lg font-bold text-slate-800 dark:text-white flex items-center gap-2">
                     <Clock className="w-5 h-5 text-indigo-500" />
-                    Recent Activity
+                    {t('recentActivity')}
                 </h3>
-                <span className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">Last 20 Records</span>
+                <span className="text-xs font-semibold text-slate-400 dark:text-slate-500 uppercase tracking-wider">{t('lastRecords')}</span>
             </div>
 
             <div className="overflow-y-auto flex-1 h-full scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-slate-700">
                 <table className="w-full text-left border-collapse">
                     <thead className="bg-slate-50 dark:bg-slate-800/80 sticky top-0 z-10 backdrop-blur-sm">
                         <tr>
-                            <th className="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Time</th>
-                            <th className="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Device</th>
-                            <th className="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Fill Level</th>
-                            <th className="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
+                            <th className="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t('time')}</th>
+                            <th className="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t('device')}</th>
+                            <th className="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t('fillLevel')}</th>
+                            <th className="p-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">{t('status')}</th>
                         </tr>
                     </thead>
                     <tbody className="divide-y divide-slate-100 dark:divide-slate-700">
@@ -55,7 +65,7 @@ const HistoryTable = ({ historyData }) => {
                                     </td>
                                     <td className="p-4">
                                         <span className={`px-3 py-1 rounded-full text-xs font-bold border ${statusColor}`}>
-                                            {record.status}
+                                            {getStatusText(record.status)}
                                         </span>
                                     </td>
                                 </tr>
@@ -64,7 +74,7 @@ const HistoryTable = ({ historyData }) => {
                         {(!Array.isArray(historyData) || historyData.length === 0) && (
                             <tr>
                                 <td colSpan="4" className="p-8 text-center text-slate-400 dark:text-slate-500">
-                                    No history data available yet.
+                                    {t('noHistory')}
                                 </td>
                             </tr>
                         )}
