@@ -27,9 +27,13 @@ const SettingsModal = ({ isOpen, onClose }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            if (isEditing) {
+            // Check if we are editing an existing registered bin
+            if (isEditing && currentBin.id) {
                 await updateRegistry(currentBin);
             } else {
+                // Determine whether we are "adding" a new bin manually OR
+                // "registering" a discovered bin (which has id=null but isEditing=true)
+                // In both cases, we need to create a new registry entry.
                 await addRegistry(currentBin);
             }
             setCurrentBin({ id: null, deviceId: '', name: '', details: '' });

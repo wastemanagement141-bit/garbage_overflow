@@ -55,7 +55,9 @@ export const updateRegistry = async (data) => {
 
 export const deleteRegistry = async (id) => {
     try {
-        const response = await axios.delete(`${REGISTRY_BASE_URL}/delete?id=${id}`);
+        const response = await axios.delete(`${REGISTRY_BASE_URL}/delete`, {
+            params: { id }
+        });
         return response.data;
     } catch (error) {
         console.error('Error deleting from registry:', error);
