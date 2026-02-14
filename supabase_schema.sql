@@ -26,3 +26,21 @@ using (true);
 create policy "Enable insert access for all users" 
 on bins for insert 
 with check (true);
+
+-- 4. Create the 'dustbin_registry' table for management
+create table if not exists dustbin_registry (
+  id uuid default gen_random_uuid() primary key,
+  deviceid text unique not null,
+  name text not null,
+  details text,
+  createdat timestamp with time zone default timezone('utc'::text, now()) not null
+);
+
+-- 5. Enable RLS for registry
+alter table dustbin_registry enable row level security;
+
+-- 6. Create policies for registry (Public for demo)
+create policy "Enable select for all" on dustbin_registry for select using (true);
+create policy "Enable insert for all" on dustbin_registry for insert with check (true);
+create policy "Enable update for all" on dustbin_registry for update using (true);
+create policy "Enable delete for all" on dustbin_registry for delete using (true);

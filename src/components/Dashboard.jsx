@@ -3,9 +3,10 @@ import { getBinStatus, getHistory } from '../services/api';
 import StatusCard from './StatusCard';
 import AlertBox from './AlertBox';
 import HistoryTable from './HistoryTable';
-import { RefreshCw } from 'lucide-react';
+import { RefreshCw, Settings } from 'lucide-react';
 import ThemeToggle from './ThemeToggle';
 import LanguageToggle from './LanguageToggle';
+import SettingsModal from './SettingsModal';
 import { useLanguage } from '../context/LanguageContext';
 
 const Dashboard = () => {
@@ -14,6 +15,7 @@ const Dashboard = () => {
     const [history, setHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [lastUpdated, setLastUpdated] = useState(new Date());
+    const [isSettingsOpen, setIsSettingsOpen] = useState(false);
 
     const fetchData = async () => {
         try {
@@ -61,9 +63,18 @@ const Dashboard = () => {
                         <span>{t('lastUpdated')}: {lastUpdated.toLocaleTimeString()}</span>
                     </div>
                     <LanguageToggle />
+                    <button
+                        onClick={() => setIsSettingsOpen(true)}
+                        className="p-1.5 md:p-2 rounded-full border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-400 hover:bg-slate-50 dark:hover:bg-slate-700 transition-all shadow-sm"
+                        title={t('settings')}
+                    >
+                        <Settings className="w-4 h-4 md:w-5 md:h-5 " />
+                    </button>
                     <ThemeToggle />
                 </div>
             </header>
+
+            <SettingsModal isOpen={isSettingsOpen} onClose={() => setIsSettingsOpen(false)} />
 
             <main className="flex-1 grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 min-h-0 overflow-y-auto lg:overflow-hidden pb-2">
                 {/* Left Column: Status Card */}

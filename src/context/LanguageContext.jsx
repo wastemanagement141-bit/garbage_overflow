@@ -36,6 +36,20 @@ const translations = {
         fillLevel: 'Fill Level',
         status: 'Status',
         noHistory: 'No history data available yet.',
+
+        // Settings
+        settings: 'Settings',
+        addBin: 'Add Dustbin',
+        editBin: 'Edit Dustbin',
+        binName: 'Dustbin Name',
+        deviceIdLabel: 'Device ID (Backend ID)',
+        binDetails: 'Dustbin Details',
+        save: 'Save',
+        cancel: 'Cancel',
+        delete: 'Delete',
+        actions: 'Actions',
+        noBins: 'No registered dustbins.',
+        allBins: 'All Dustbins',
     },
     ta: {
         // Header
@@ -68,6 +82,20 @@ const translations = {
         fillLevel: 'நிரப்பு நிலை',
         status: 'நிலை',
         noHistory: 'வரலாற்று தரவு இன்னும் கிடைக்கவில்லை.',
+
+        // Settings
+        settings: 'அமைப்புகள்',
+        addBin: 'குப்பைத் தொட்டியைச் சேர்',
+        editBin: 'குப்பைத் தொட்டியைத் திருத்து',
+        binName: 'குப்பைத் தொட்டி பெயர்',
+        deviceIdLabel: 'சாதன ஐடி (பின்புல ஐடி)',
+        binDetails: 'குப்பைத் தொட்டி விவரங்கள்',
+        save: 'சேமி',
+        cancel: 'ரத்து செய்',
+        delete: 'நீக்கு',
+        actions: 'செயல்கள்',
+        noBins: 'பதிவு செய்யப்பட்ட குப்பைத் தொட்டிகள் இல்லை.',
+        allBins: 'அனைத்து குப்பைத் தொட்டிகள்',
     }
 };
 
